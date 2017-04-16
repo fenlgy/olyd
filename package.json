@@ -5,17 +5,13 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "mocha --compilers js:babel-core/register --require ./test/setup.js",
-    "build": "node build/build.js",
-    "patch": "npm run build && npm version patch",
-    "beta": "npm run build && npm publish --tag=beta",
-    "start": "node scripts/server.js",
-    "ie8": "node scripts/server.js --ie8",
-    "dev": "node build/server.js"
+    "serve": "webpack-dev-server --inline --hot  --history-api-fallback",
+    "dev": "node server"
   },
   "author": "codering",
   "license": "MIT",
   "dependencies": {
-
+    "classnames": "^2.2.5"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",
@@ -51,7 +47,7 @@
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-standard": "^2.0.1",
     "eventsource-polyfill": "^0.9.6",
-    "extract-text-webpack-plugin": "^2.0.0",
+    "extract-text-webpack-plugin": "1.0.1",
     "file-loader": "^0.10.0",
     "friendly-errors-webpack-plugin": "^1.6.1",
     "fs-extra": "^2.0.0",
