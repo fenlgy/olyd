@@ -14,7 +14,7 @@ function resolve (relativePath) {
 module.exports = {
   entry: {
     // vendor: ['react','react-dom','./src/reactRouter.js','echarts'],
-    index: [resolve('src/index.js')],
+    index: [resolve('demos/index.js')],
   },
   output: {
     path: resolve('dist'),//打包后的文件存放的地方
@@ -33,7 +33,7 @@ module.exports = {
     loaders: [
       {
         test: /\.(js|jsx)$/,
-        include: [resolve('src')],
+        include: [resolve('src'),resolve('demos')],
         loader: 'babel'
       },
       {
@@ -59,7 +59,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'lib',
       inject: true,
-      template: resolve('src/index.html'),
+      template: resolve('demos/index.html'),
     }),
     ignorePlugin,
     new webpack.HotModuleReplacementPlugin(),

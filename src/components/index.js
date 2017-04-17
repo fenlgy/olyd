@@ -1,11 +1,14 @@
 /**
  * Created by Administrator on 2017/4/14.
  */
-// import olyTable from './table'
+import Table from './table'
 
-window._utils = require('./utils')
+// 传递参数是为了少找
+Table($,window,document)
 
+
+
+console.log($.fn.olyTable)
 module.exports = {
-    olyTable:require('./table'),
     utils:window._utils
 }
