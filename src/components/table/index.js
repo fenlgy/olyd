@@ -70,6 +70,10 @@ module.exports = function ($, window, document, undefined) {
             }
 
             let html = '';
+
+            const classnames = require('classnames');
+
+
             if (isheadFixed) {
                 html = `<div class="${pluginClassName + '__wrapper'}">
                             <div class="${pluginClassName + '__fixed-thead'}">${getTable(thead)}</div>
@@ -142,14 +146,21 @@ module.exports = function ($, window, document, undefined) {
 
 
                 })
+
+              .on('mousedown','.rezise',function (e) {
+
+                console.log(e.clientX,index)
+              })
+              .on('mouseup','.rezise',function (e) {
+                console.log(e.clientX)
+              })
         },
         _cache: function (name, val) {
             if (name in this._cached) {
                 return this._cached[name];
             }
 
-            // TODO 需要判断 val 的类型赋值
-            this._cached[name] = val;
+            this._cached[name] = $.isFunction(val) ? val() : val;
 
             return this._cached[name];
         },
@@ -234,7 +245,7 @@ module.exports = function ($, window, document, undefined) {
             this._cache('normalizeColumns',normalizeColumns);
 
             const _compilerColumns = (columns) => {
-                columns.forEach((val) => {
+                columns.forEach((val,i) => {
                     if (val.children && val.children.length > 0) {
                         _compilerColumns(val.children)
                     } else {
@@ -253,7 +264,7 @@ module.exports = function ($, window, document, undefined) {
         wrapTag: function (str,tag) {
             return `<${tag}>${str}</${tag}>`
         },
-        getExtraCol: function () {
+        getExtraCol: function () { //增加序号，checkbox 等额外的列
             const extraCol = [];
             if (this.settings.rowSelection) {
                 extraCol.push({
@@ -305,7 +316,7 @@ module.exports = function ($, window, document, undefined) {
             // 标准化数据，成为一维数组
             this.normalizeColumns(newColumns)
 
-            newColumns.forEach((column) => {
+            newColumns.forEach((column,index) => {
                 let tr = '';
 
                 column.forEach((cell, i) => {
@@ -314,9 +325,12 @@ module.exports = function ($, window, document, undefined) {
                     const rowspan = _utils._IF(cell.rowSpan, 'rowspan');
                     const className = _utils._IF(cell.className, 'class');
 
-                    // console.log(colspan,rowspan,className)
+                    let _th = cell.title;
+                    if(!cell.colSpan || cell.colSpan == 0){
+                      _th = this.getTh(cell.title)
+                    }
 
-                    tr += `<th ${colspan}${rowspan}${className}>${this.getTh(cell.title)}</th>`
+                    tr += `<th ${colspan}${rowspan}${className}>${_th}</th>`
                 })
 
                 dom += _this.wrapTag(tr,'tr')
@@ -328,12 +342,13 @@ module.exports = function ($, window, document, undefined) {
             // console.log($.inArray('children',data))
             return thead
         },
-        getTh:function (value) {
+        getTh:function (value,index) {
             const settings = this.settings;
             let th = value;
 
+            //TODO 排序，晒选等内容
             if(settings.isResizeCol){
-                th += `<div class="rezise"></div>`
+                // th += `<div class="rezise" ${_utils._IF(index,'data-index')}></div>`
             }
 
             return th
