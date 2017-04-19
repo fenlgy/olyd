@@ -102,7 +102,6 @@ $('#app').olyTable({
     colResize: true,
     serialNumber: true,
     headFixed: true,
-    isResizeCol:true,
     afterRender: function (item) {
         console.log('after render', item)
     }
@@ -111,6 +110,7 @@ $('#app').olyTable({
 $('#app1').olyTable({
     columns: colums1,
     rowSelection: true,
+    colResize: true,
     dataSource: dataSource1.list,
 })
 

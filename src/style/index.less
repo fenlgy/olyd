@@ -17,7 +17,7 @@ body {
 
   &__wrapper {
     position: relative;
-    width: 1200px;
+    width: 1100px;
     margin-bottom:16px;
   }
 
@@ -63,18 +63,17 @@ body {
       overflow:hidden;word-break:break-all;text-overflow: ellipsis;white-space: nowrap;
     }
   }
+}
 
-  .rezise{
-    position: absolute;
-    top:0;
-    right:0;
-    width: 3px;
-    height: 100%;
-    background: #000;
-    cursor: col-resize;
+.col-resize-handle{
+  position: absolute;
+  bottom:0;
+  width: 9px;
+  height: 100%;
+  background: #ddd;
+  cursor: col-resize;
 
-    &:hover{
-      background: #f5f5f5;
-    }
+  &:hover{
+    background: #ccc;
   }
 }
