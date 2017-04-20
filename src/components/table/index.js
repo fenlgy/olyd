@@ -56,7 +56,8 @@ function Plugin(element, options) {
     this._name = pluginName;
     //放置一些全局要用的变量，如jquery 对象
     this.GLOBAL = {};
-    this._cached = {}
+    this._cached = {};
+    this.state = {};
     this.init();
 }
 
@@ -246,6 +247,10 @@ $.extend(Plugin.prototype, {
                 _this.sort('email')
             })
     },
+    setState:function (obj,cb) {
+        $.extend(this.state,obj);
+        cb && $.isFunction(cb) && cb();
+    },
     _cache: function (name, val) {
         if (name in this._cached) {
             return this._cached[name];
@@ -376,6 +381,7 @@ $.extend(Plugin.prototype, {
     sort:function (arg,func) {
         const dataSource = this.settings.dataSource;
 
+        // 传递方法进来则直接执行传递的方法
         dataSource.sort((a,b) => {
             if($.isFunction(arg)){
                 return arg(a,b)
@@ -396,6 +402,7 @@ $.extend(Plugin.prototype, {
     },
     updata:function () {
         const tbody = this.getBodyRows(this.settings.dataSource);
+        // this.GLOBAL.$table.find('tbody').html(tbody);
         this.GLOBAL.$table.find('tbody').html(tbody);
     },
     getExtraCol: function () { //增加序号，checkbox 等额外的列

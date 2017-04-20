@@ -3,28 +3,28 @@ import Mock from 'mockjs'
 require('components')
 
 var colums = [
-    {title: '姓名', dataIndex: 'name',width:'100px'},
+    {title: '姓名', dataIndex: 'name', width: '100px'},
     {
         title: "联系方式", children: [
-        {title: '地址', dataIndex: 'address',width:'100px'},
+        {title: '地址', dataIndex: 'address', width: '100px'},
         {
-            title: '手机', dataIndex: 'phone',width:'120px', render: function (text) {
+            title: '手机', dataIndex: 'phone', width: '120px', render: function (text) {
             return '<a href="mailto:' + text + '">' + text + '</a>'
         }
-        },{
-            title:'二级',
+        }, {
+            title: '二级',
             children: [
-                {title: '地址', dataIndex: 'address1',width:'100px'},
+                {title: '地址', dataIndex: 'address1', width: '100px'},
                 {
-                    title: '手机', dataIndex: 'phone1',width:'120px', render: function (text) {
+                    title: '手机', dataIndex: 'phone1', width: '120px', render: function (text) {
                     return '<a href="mailto:' + text + '">' + text + '</a>'
                 }
-                },{
-                    title:'三级',
+                }, {
+                    title: '三级',
                     children: [
-                        {title: '地址', dataIndex: 'address2',width:'100px'},
+                        {title: '地址', dataIndex: 'address2', width: '100px'},
                         {
-                            title: '手机', dataIndex: 'phone2',width:'100px', render: function (text) {
+                            title: '手机', dataIndex: 'phone2', width: '100px', render: function (text) {
                             return '<a href="mailto:' + text + '">' + text + '</a>'
                         }
                         }
@@ -36,11 +36,11 @@ var colums = [
     },
 
     {
-        title: '邮箱', dataIndex: 'email',width:'100px', render: function (text) {
+        title: '邮箱', dataIndex: 'email', width: '100px', render: function (text) {
         return '<a href="mailto:' + text + '">' + text + '</a>'
-    },sort:true,
+    }, sort: true,
     },
-    {title: '年龄', dataIndex: 'year',width:'80px'},
+    {title: '年龄', dataIndex: 'year', width: '80px'},
     {
         title: '操作', render: function () {
         return '<a href="#">详情</a>'
@@ -49,17 +49,18 @@ var colums = [
 ]
 
 var colums1 = [
-    {title: '姓名', dataIndex: 'name',width:'50px'},
+    {title: '姓名', dataIndex: 'name', width: '50px'},
     {title: '地址', dataIndex: 'address'},
     {title: '手机', dataIndex: 'phone'},
     {
         title: '邮箱',
         dataIndex: 'email',
-        width:"180px",
-        sort:true,
+        width: "180px",
+        sort: true,
+        filter:'',
         render: function (text) {
-        return '<a href="mailto:' + text + '">' + text + '</a>'
-    }
+            return '<a href="mailto:' + text + '">' + text + '</a>'
+        }
     },
     {title: '年龄', dataIndex: 'year'},
     {
@@ -71,7 +72,7 @@ var colums1 = [
 
 // 使用 Mock
 var dataSource = Mock.mock({
-    'list|300': [{
+    'list|100': [{
         name: '@cname',
         address: "@city",
         address1: "@city",
@@ -122,14 +123,17 @@ $('#app1').olyTable({
 var instance = $("#app").data('plugin_olyTable');
 
 
-console.log(instance)
+console.log($("#app").olyTable)
 
-$('button').on('click',function () {
-    var reverse = false;
-    if(reverse){
-        instance.sort('year',true)
-    }else {
+$('button').on('click', function (reverse = false) {
+
+    if (reverse) {
+        instance.sort('year')
+    } else {
+        reverse = !reverse
         instance.sort('year')
     }
+    console.log(reverse)
 
+    return reverse
 })

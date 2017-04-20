@@ -14,11 +14,6 @@ const defaults = {
     direction:'default'
 };
 
-const _cls = {
-    name: '',
-    colResize: 'col-resize-handle'
-}
-
 
 // 构造函数
 function Plugin(element, options) {

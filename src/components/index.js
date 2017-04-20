@@ -7,7 +7,6 @@
 require('./table');
 require('./drage');
 
-console.log($.fn.olyTable)
 module.exports = {
     utils:window._utils
 }
