@@ -122,8 +122,9 @@ $('#app1').olyTable({
 
 var instance = $("#app").data('plugin_olyTable');
 
+$('#app1').olyTable('test',{a:11})
 
-console.log($("#app").olyTable)
+console.log(instance)
 
 $('button').on('click', function (reverse = false) {
 
