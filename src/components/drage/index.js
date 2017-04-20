@@ -101,7 +101,6 @@ $.extend(Plugin.prototype, {
 
             func[this.settings.direction]()
 
-
             this.settings.onDraging && this.settings.onDraging.call($el[0],_state)
         }
     },

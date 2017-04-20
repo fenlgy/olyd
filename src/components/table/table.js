@@ -571,7 +571,8 @@ $.extend(Plugin.prototype, {
 
 //
 $.fn[pluginName] = function (options) {
-    const args = Array.prototype.slice.call(arguments, 1);
+  // const args = Array.prototype.slice.call(arguments, 1);
+    const args = {...arguments}[1];
     this.each(function () {
         const data = $.data(this, "plugin_" + pluginName);
         if (!data) {

@@ -11,7 +11,7 @@ const _default = {
 
 $.extend(test.settings,_default)
 
-console.log(test)
+console.log($.fn.olyTable,1111)
 
 test.prototype.ttttttttttttt = function () {
   // alert(1111)
