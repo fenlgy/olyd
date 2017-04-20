@@ -38,7 +38,7 @@ var colums = [
     {
         title: '邮箱', dataIndex: 'email',width:'100px', render: function (text) {
         return '<a href="mailto:' + text + '">' + text + '</a>'
-    }
+    },sort:true,
     },
     {title: '年龄', dataIndex: 'year',width:'80px'},
     {
@@ -53,7 +53,11 @@ var colums1 = [
     {title: '地址', dataIndex: 'address'},
     {title: '手机', dataIndex: 'phone'},
     {
-        title: '邮箱', dataIndex: 'email',width:"80px", render: function (text) {
+        title: '邮箱',
+        dataIndex: 'email',
+        width:"180px",
+        sort:true,
+        render: function (text) {
         return '<a href="mailto:' + text + '">' + text + '</a>'
     }
     },
@@ -67,7 +71,7 @@ var colums1 = [
 
 // 使用 Mock
 var dataSource = Mock.mock({
-    'list|10-15': [{
+    'list|300': [{
         name: '@cname',
         address: "@city",
         address1: "@city",
@@ -111,6 +115,7 @@ $('#app1').olyTable({
     columns: colums1,
     rowSelection: true,
     colResize: true,
+    // showHeader:false,
     dataSource: dataSource1.list,
 })
 
@@ -119,3 +124,12 @@ var instance = $("#app").data('plugin_olyTable');
 
 console.log(instance)
 
+$('button').on('click',function () {
+    var reverse = false;
+    if(reverse){
+        instance.sort('year',true)
+    }else {
+        instance.sort('year')
+    }
+
+})

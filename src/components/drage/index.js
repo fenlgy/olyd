@@ -11,7 +11,7 @@
 const pluginName = "olyDrage";
 
 const defaults = {
-
+    direction:'default'
 };
 
 const _cls = {
@@ -41,7 +41,6 @@ $.extend(Plugin.prototype, {
     init: function () {
 
         this.handler();
-
     },
     handler: function () {
         const $el = this.$element;
@@ -56,21 +55,16 @@ $.extend(Plugin.prototype, {
 
         bindHander('mousedown', this.settings.target, (e) => this.startDrage(e))
 
-
-
     },
     setState:function (obj,cb) {
         $.extend(this.state,obj);
         cb && $.isFunction(cb) && cb();
     },
-    getCache:function () {
-
-    },
     startDrage: function (e) {
         this.state.canMove = true;
         const $el = $(e.currentTarget)
         this.settings.$handleDrage = $el;
-        const _offset = $el.offset()
+        const _offset = $el.position()
         this.setState({
             startX: e.clientX,
             startY: e.clientY,
@@ -89,15 +83,29 @@ $.extend(Plugin.prototype, {
                 _nY = e.clientY,
                 _sX = _state.startX, // start x
                 _sY = _state.startY,
-                _elX = _state.elX,
-                _elY = _state.elY;
+            // 当前鼠标的位置 减去 鼠标和元素原点的距离
+            moveLeft =_nX - ( _state.startX - _state.elX),
+            moveTop = _nY - ( _state.startY - _state.elY);
 
             _state.disX = _nX - _sX;
             _state.disY = _nY - _sY;
 
+            //TODO 限制移动范围
+            // if(moveLeft < 0){
+            //     moveLeft = 0;
+            // }else if(){
+            //
+            // }
 
             const $el = this.settings.$handleDrage;
-            $el.css({left: _elX + _state.disX})
+            const func = {
+                x:function(){$el.css({left: moveLeft})},
+                y:function(){$el.css({top: moveTop})},
+                'default':function(){$el.css({left: moveLeft,top: moveTop})},
+            };
+
+            func[this.settings.direction]()
+
 
             this.settings.onDraging && this.settings.onDraging.call($el[0],_state)
         }

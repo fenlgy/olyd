@@ -24,11 +24,26 @@ var pluginName = "olyTable",
         headFixed: false,
         showThead: true, // 显示 thead
         rowSelection: false, // 是否带check box
+        showHeader:true,
+        // afterUpdata
     };
 
 const _utils = require('components/utils');
+
+const getCls = name => {
+    if(!name){
+        return pluginClassName
+    }
+    return pluginClassName + name;
+};
+
 const _cls = {
-    colResize: 'col-resize-handle'
+    colResize: 'col-resize-handle',
+    wrapper :getCls('__wrapper'),
+    container:getCls('__container'),
+    fixHeader:getCls('__fixed-thead'),
+    body:getCls('__body'),
+    fixed:getCls('--fixed')
 }
 
 
@@ -57,30 +72,37 @@ $.extend(Plugin.prototype, {
 
     },
     getHtml: function () {
-        let customClassName = this.settings.className ? ' ' + this.settings.className : '';
         const thead = this.getThead(),
             tbody = this.getTbody(),
-            isheadFixed = this.settings.headFixed,
+            _settings = this.settings,
+            isheadFixed = _settings.headFixed,
             colgroup = this.getColgroup();
 
-        let fixedClassName = isheadFixed ? ` ${pluginClassName + '--fixed'}` : '';
+        const classnames = require('classnames');
+        const className = classnames(
+            getCls(),
+            {
+                [_settings.className]:_settings.className,
+                [getCls('--fixed')]:_settings.headFixed || _settings.colResize
+            }
+        )
 
         function getTable(con) {
-            return `<table class="${pluginClassName + customClassName + fixedClassName}">${colgroup}${con}</table>`;
+            return `<table class="${className}">${colgroup}${con}</table>`;
+        }
+
+        function getWrapper(con) {
+            return `<div class="${_cls.wrapper}"><div class="${_cls.container}">${con}</div></div>`
         }
 
         let html = '';
 
-        const classnames = require('classnames');
-
-
         if (isheadFixed) {
-            html = `<div class="${pluginClassName + '__wrapper'}">
-                            <div class="${pluginClassName + '__fixed-thead'}">${getTable(thead)}</div>
-                            <div class="${pluginClassName + '__body'}">${getTable(tbody)}</div>
-                         </div>`;
+            html = getWrapper(`<div class="${_cls.fixHeader}">${getTable(thead)}</div><div class="${_cls.body}">${getTable(tbody)}</div>`);
+        } else if (!_settings.showHeader) {
+            html = getWrapper(`${getTable(tbody)}`);
         } else {
-            html = `<div class="${pluginClassName + '__wrapper'}">${getTable(thead + tbody)}</div>`;
+            html = getWrapper(`${getTable(thead + tbody)}`);
         }
 
         return html;
@@ -92,13 +114,6 @@ $.extend(Plugin.prototype, {
         $element.append($html);
 
         this.GLOBAL.$table = $html;
-    },
-    setFrameWork: function () {
-        const classname = _utils.classnames({
-            pluginClassName
-        })
-
-        $table = $(`<table class="${pluginClassName + customClassName + fixedClassName}">${colgroup}${con}</table>`)
     },
     setColResize: function () {
 
@@ -128,16 +143,23 @@ $.extend(Plugin.prototype, {
             return a.attributes['data-col-index'].value - b.attributes['data-col-index'].value;
         });
 
-        const setColResizeProps = () =>{
+        const setColResizeProps = (needTop) =>{
             let colX = 0;
             $useTh.each(function (index) {
                 const h = $(this).outerHeight();
                 colX += $(this).outerWidth();
-                $colResize.eq(index).css({height: h, left: colX - 4})
+
+                const _css = {height: h, left: colX - 4}
+                if(needTop === 'needTop'){
+                    $.extend(_css,{
+                        top:$(this).position().top
+                    })
+                }
+                $colResize.eq(index).css(_css)
             })
         };
 
-        setColResizeProps();
+        setColResizeProps('needTop');
 
         $element.find('.oly-table__wrapper').append($colResize);
 
@@ -146,12 +168,12 @@ $.extend(Plugin.prototype, {
         let $col = null;
         $element.olyDrage({
             target: '.col-resize-handle',
+            direction:'x',
             onDrageStart: function () {
                 const index = $(this).attr('data-index');
-                $col = $element.find('col').eq(index);
+                $col = $element.find('colgroup').find('col:eq('+ index +')');
                 _startW = $col.width();
 
-                console.log($col, _startW)
             },
             onDraging: function (opt) {
                 $col.width(_startW + opt.disX)
@@ -159,8 +181,7 @@ $.extend(Plugin.prototype, {
             onDrageEnd: function () {
                 setColResizeProps();
             }
-        })
-
+        });
 
     },
     destroy: function () {
@@ -183,6 +204,8 @@ $.extend(Plugin.prototype, {
         const _this = this;
         let select = [];
         const $table = this.GLOBAL.$table;
+
+        console.log($table)
 
         // tr 点击事件
         $table.on('click', 'tbody tr', function () {
@@ -218,8 +241,9 @@ $.extend(Plugin.prototype, {
                 } else {
                     _utils._arrayDel(select, this.value)
                 }
-
-
+            })
+            .on('click','.J-col-sort',function () {
+                _this.sort('email')
             })
     },
     _cache: function (name, val) {
@@ -289,7 +313,8 @@ $.extend(Plugin.prototype, {
             const cell = {
                 className: column.className || '',
                 title: column.title,
-                dataIndex: column.dataIndex
+                dataIndex: column.dataIndex,
+                sort:column.sort
             };
             if (column.children) {
                 this.getHeaderRows(column.children, currentRow + 1, rows);
@@ -348,6 +373,31 @@ $.extend(Plugin.prototype, {
     wrapTag: function (str, tag) {
         return `<${tag}>${str}</${tag}>`
     },
+    sort:function (arg,func) {
+        const dataSource = this.settings.dataSource;
+
+        dataSource.sort((a,b) => {
+            if($.isFunction(arg)){
+                return arg(a,b)
+            }else {
+                if($.isNumeric(a[arg])){
+                    return a[arg] - b[arg]
+                }
+            }
+        });
+
+        this.updata();
+        func && func();
+    },
+    setDataSource:function (data,func) {
+        this.settings.dataSource = data;
+        this.updata();
+        func && func();
+    },
+    updata:function () {
+        const tbody = this.getBodyRows(this.settings.dataSource);
+        this.GLOBAL.$table.find('tbody').html(tbody);
+    },
     getExtraCol: function () { //增加序号，checkbox 等额外的列
         const extraCol = [];
         if (this.settings.rowSelection) {
@@ -405,8 +455,9 @@ $.extend(Plugin.prototype, {
                 }
 
                 //TODO 排序，晒选等内容
-                if (settings.isResizeCol) {
-                    // th += `<div class="rezise" ${_utils._IF(index,'data-index')}></div>`
+                if (col.sort) {
+                    _th += `<a href="javascript:">#</a>`;
+
                 }
 
 
@@ -415,7 +466,8 @@ $.extend(Plugin.prototype, {
                 const colIndex = _utils._IF(col.colIndex + '', 'data-col-index');
                 let className = _utils.classnames(
                     col.className, {
-                        ['J-col']: col.colIndex + 1 // number 0 为false ，所以需要转成string
+                        ['J-col']: col.colIndex + 1, // number 0 为false ，所以需要转成string
+                        ['J-col-sort']: col.sort
                     }
                 );
 
