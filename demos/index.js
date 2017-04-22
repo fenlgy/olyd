@@ -38,9 +38,11 @@ var colums = [
     {
         title: '邮箱', dataIndex: 'email', width: '100px', render: function (text) {
         return '<a href="mailto:' + text + '">' + text + '</a>'
-    }, sort: true,
+    }, sort: function (a, b) {
+        return a.length - b.length
     },
-    {title: '年龄', dataIndex: 'year', width: '80px'},
+    },
+    {title: '年龄', dataIndex: 'year', width: '80px',sort:true},
     {
         title: '操作', render: function () {
         return '<a href="#">详情</a>'
@@ -62,7 +64,7 @@ var colums1 = [
             return '<a href="mailto:' + text + '">' + text + '</a>'
         }
     },
-    {title: '年龄', dataIndex: 'year'},
+    {title: '年龄', dataIndex: 'year',sort:true},
     {
         title: '操作', render: function () {
         return '<a href="#">详情</a>'
@@ -129,12 +131,17 @@ console.log(instance)
 $('button').on('click', function (reverse = false) {
 
     if (reverse) {
-        instance.sort('year')
+        instance.onSort('year')
     } else {
         reverse = !reverse
-        instance.sort('year')
+        instance.onSort('year')
     }
     console.log(reverse)
 
     return reverse
 })
+
+
+var  hehe = {a:84}
+
+console.log(hehe[0])

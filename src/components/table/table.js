@@ -2,8 +2,9 @@
  * oly-table
  * ========================================================================
  * ======================================================================== */
-
-
+//TODO _cached 存储的应该是那些不被改变的 jQuery 对象，或者是持续化的东西
+//TODO 全局使用的变量放到GLOBAL中
+//TODO 翻页数据做cached缓存，设置缓存时间
 
 // 声明默认属性对象
 var pluginName = "olyTable",
@@ -25,6 +26,7 @@ var pluginName = "olyTable",
         showThead: true, // 显示 thead
         rowSelection: false, // 是否带check box
         showHeader:true,
+        sortOder:'desc', // more所有的排序方式，可在columns 中自定义每一个
         // afterUpdata
     };
 
@@ -64,7 +66,7 @@ function Plugin(element, options) {
 Plugin.VERSION = '0.0.1';
 
 // 为了避免和原型对象Plugin.prototype的冲突，这地方采用继承原型对象的方法
-$.extend(Plugin.prototype, {
+$.extend(Plugin.prototype,{
     init: function () {
         this.extensions && this.extensions()
         this.beforeRender();
@@ -243,9 +245,8 @@ $.extend(Plugin.prototype, {
                     _utils._arrayDel(select, this.value)
                 }
             })
-            .on('click','.J-col-sort',function () {
-                _this.sort('email')
-            })
+            // 排序
+            .on('click','.J-col-sort',(e) => this.handlerSort(e))
     },
     setState:function (obj,cb) {
         $.extend(this.state,obj);
@@ -315,12 +316,18 @@ $.extend(Plugin.prototype, {
                     rows.push([]);
                 }
             }
+
             const cell = {
                 className: column.className || '',
                 title: column.title,
                 dataIndex: column.dataIndex,
-                sort:column.sort
             };
+
+            if(column.sort){
+                $.extend(cell,{sort:column.sort})
+            }
+
+
             if (column.children) {
                 this.getHeaderRows(column.children, currentRow + 1, rows);
             }
@@ -378,17 +385,46 @@ $.extend(Plugin.prototype, {
     wrapTag: function (str, tag) {
         return `<${tag}>${str}</${tag}>`
     },
-    sort:function (arg,func) {
+    handlerSort:function (e) {
+        const index = $(e.currentTarget).attr('data-col-index');
+        const settingData = this._cached.compilerColumns;
+        let data = settingData[index];
+        data.sortOder = data.sortOder ? !data.sortOder : this.settings.sortOder;
+
+        settingData.forEach( data => {
+            data.toSort && (data.toSort = false)
+        });
+        data.toSort = true;
+
+        this.initSort()
+    },
+    initSort:function () {
+        const settingData = this._cached.compilerColumns;
         const dataSource = this.settings.dataSource;
 
+        // const sortIndex = settingData[]
+        console.log($.inArray('toSort',settingData))
+
+        function getIndex() {
+
+        }
         // 传递方法进来则直接执行传递的方法
         dataSource.sort((a,b) => {
-            if($.isFunction(arg)){
-                return arg(a,b)
+            if($.isFunction(opt)){
+                console.log('sosrt')
+                return opt(a,b)
             }else {
-                if($.isNumeric(a[arg])){
-                    return a[arg] - b[arg]
+                const aa = a[opt],bb = b[opt];
+                if($.isNumeric(aa) && $.isNumeric(bb)){
+                    return aa - bb
                 }
+
+                if(aa === bb){
+                    return 0;
+                }
+
+                return aa.length - bb.length
+
             }
         });
 

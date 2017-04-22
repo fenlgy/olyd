@@ -3,18 +3,20 @@
  */
 
 
-const test = require('./table')
 
-const _default = {
+
+const extensionDefault = {
   tttttttt:'111111111111111'
-}
+};
 
-$.extend(test.settings,_default)
+const extensionsPrototype = {
+  test:function () {
+      alert(1)
+  }
+};
 
-console.log($.fn.olyTable,1111)
 
-test.prototype.ttttttttttttt = function () {
-  // alert(1111)
-}
-
-module.export = test;
+module.exports = {
+    extensionDefault:extensionDefault,
+    extensionsPrototype:extensionsPrototype
+};
