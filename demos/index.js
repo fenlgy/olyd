@@ -74,7 +74,7 @@ var colums1 = [
 
 // 使用 Mock
 var dataSource = Mock.mock({
-    'list|100': [{
+    'list|20': [{
         name: '@cname',
         address: "@city",
         address1: "@city",
@@ -96,7 +96,6 @@ var dataSource1 = Mock.mock({
         "year|20-35": 1
     }]
 })
-
 
 $('#app').olyTable({
     columns: colums,
@@ -140,8 +139,3 @@ $('button').on('click', function (reverse = false) {
 
     return reverse
 })
-
-
-var  hehe = {a:84}
-
-console.log(hehe[0])

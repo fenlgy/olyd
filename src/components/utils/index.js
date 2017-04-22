@@ -5,17 +5,17 @@
 
 // 如果变量有值则输出本身，没值则不输出
 // 等式输出用于class，之类的html类标签属性
-function _IF(variable, equ) {
+function IF(variable, equ) {
 
-    if(!variable || variable === 'undefined'){
+    if (!variable || variable === 'undefined') {
         return ''
     }
 
-    return  equ ? `${equ}="${variable}"` : variable
+    return equ ? `${equ}="${variable}"` : variable
 
 }
 
-function _arrayDel(arr, val) {
+function arrayDel(arr, val) {
     var index = $.inArray(val, arr)
     if (index > -1) {
         arr.splice(index, 1)
@@ -25,37 +25,41 @@ function _arrayDel(arr, val) {
 }
 
 // 数组对象
-// @param opt
-function inArrary(opt,arr) {
-    let i = -1;
-    arr.forEach( (arr,index) => {
-        if(arr[i] === opt){
-            i = index
-        }
-    })
+// @param arr 数组或数组对象
+// @param opts
+function inArrary(arr, opts) {
+    const isObject = $.isPlainObject(opts);
+    const key = isObject && Object.keys(opts)[0]
 
+    function getIndex(arr, opts, i = -1) {
 
-    if(typeof opt === 'string'){
+        arr.forEach((_arr, index) => {
+            if(isObject){
+                if(_arr[key] === opts[key]){
+                    i = index
+                }
 
-    }else if(typeof  opt === 'object'){
-        arr.forEach( (arr,index) => {
-            if(arr[opt.key] === opt.value){
-                i = index
+            }else {
+                if(_arr === opts){
+                    i = index
+                }
             }
-        })
+            })
+        return i
     }
-
-    return i
+    return getIndex(arr, opts)
 }
 
-function installExtensions(){
+
+function installExtensions() {
 
 }
 
 module.exports = {
-    _IF:_IF,
-    _arrayDel:_arrayDel,
-    classnames:require('classnames'),
-    moment:require('moment'),
-    installExtensions:installExtensions
+    IF: IF,
+    arrayDel: arrayDel,
+    classnames: require('classnames'),
+    moment: require('moment'),
+    inArray:inArrary,
+    installExtensions: installExtensions
 }
