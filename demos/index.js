@@ -123,19 +123,13 @@ $('#app1').olyTable({
 
 var instance = $("#app").data('plugin_olyTable');
 
-$('#app1').olyTable('test',{a:11})
+// $('#app1').olyTable('test',{a:11})
 
 console.log(instance)
 
-$('button').on('click', function (reverse = false) {
+$('button').on('click', function () {
 
-    if (reverse) {
-        instance.onSort('year')
-    } else {
-        reverse = !reverse
-        instance.onSort('year')
-    }
-    console.log(reverse)
+   instance.onSort('year')
 
     return reverse
 })
