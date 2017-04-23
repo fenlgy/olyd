@@ -32,7 +32,7 @@ function setupCompiler(host, port, protocol) {
 
   compiler.plugin('done', function(stats) {
 
-    console.log('compiler')
+    console.log(stats)
 
   });
 }

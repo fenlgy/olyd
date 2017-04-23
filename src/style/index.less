@@ -42,7 +42,7 @@ body {
   }
 
   &__body{
-    height: 200px;
+    //height: 200px;
     min-height: 200px;
     overflow: auto;
   }
@@ -59,9 +59,13 @@ body {
     width: 0;
 
     td,th{
-      position: relative;
+      //position: relative; 会引起苹果下拖动列，不会渲染td的线
       overflow:hidden;word-break:break-all;text-overflow: ellipsis;white-space: nowrap;
     }
+  }
+
+  &__th--actived{
+
   }
 }
 
@@ -70,8 +74,7 @@ body {
   bottom:0;
   width: 9px;
   height: 100%;
-  background: transparent;
+  background: #fff;
+  opacity:0; // 背景如果设为 ransparnet 则会导致低版本ie 难以被选中
   cursor: col-resize;
-
-
 }

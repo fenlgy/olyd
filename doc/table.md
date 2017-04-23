@@ -17,6 +17,7 @@ rowSelection|是否需要 checkbox |boolean|false
 sortOder|排序方式 `asc` `desc`|string| 'asc'
 showHeader|是否显示表头|boolean| true
 height | 表格高度 |number| -
+setter| 更新表格数据 |number| -
 
 
 ### columns

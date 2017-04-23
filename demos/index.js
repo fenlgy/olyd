@@ -50,7 +50,7 @@ var colums = [
     }
 ]
 
-var colums1 = [
+var colums2 = [
     {title: '姓名', dataIndex: 'name', width: '50px'},
     {title: '地址', dataIndex: 'address'},
     {title: '手机', dataIndex: 'phone'},
@@ -71,7 +71,27 @@ var colums1 = [
     }
     }
 ]
-
+var colums1 = [
+  {title: '姓名', dataIndex: 'name', width: '50px'},
+  {title: '地址', dataIndex: 'address'},
+  {title: '手机', dataIndex: 'phone'},
+  {
+    title: '邮箱',
+    dataIndex: 'email',
+    width: "180px",
+    sort: true,
+    filter:'',
+    render: function (text) {
+      return '<a href="mailto:' + text + '">' + text + '</a>'
+    }
+  },
+  {title: '年龄', dataIndex: 'year',sort:true},
+  {
+    title: '操作', render: function () {
+    return '<a href="#">详情</a>'
+  }
+  }
+]
 // 使用 Mock
 var dataSource = Mock.mock({
     'list|20': [{
@@ -96,6 +116,8 @@ var dataSource1 = Mock.mock({
         "year|20-35": 1
     }]
 })
+
+
 
 $('#app').olyTable({
     columns: colums,
@@ -128,8 +150,10 @@ var instance = $("#app").data('plugin_olyTable');
 console.log(instance)
 
 $('button').on('click', function () {
-
-   instance.onSort('year')
-
-    return reverse
+  $('#app').olyTable('setter',{
+      dataSource:dataSource1.list,
+    columns:colums2
+  },function () {
+    console.log('updata success !')
+  })
 })
