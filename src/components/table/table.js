@@ -230,6 +230,10 @@ class Table {
     $table.olyDrage({
       target: '.col-resize-handle',
       direction: 'x',
+      container:function () {
+        const index = $(this).attr('data-index');
+        return $table.find('th[data-col-index='+ index +']')
+      },
       onDrageStart: function () {
         const index = $(this).attr('data-index')
         $col = $colgroup.find('col:eq(' + index + ')')
