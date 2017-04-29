@@ -11,7 +11,7 @@
 const pluginName = 'olyDrage'
 
 const defaults = {
-  direction: 'default'
+  axis: 'default'
 }
 
 // 构造函数
@@ -37,8 +37,13 @@ $.extend(Plugin.prototype, {
     this.handler();
   },
   handler: function () {
-    const $el = this.$element
-    const css = {position:'absolute'};
+    const $el = this.$element;
+    const cursor = {
+      x:'col-resize',
+      y:'row-resize',
+      'default':'move'
+    }
+    const css = {position:'absolute',cursor:cursor[this.settings.axis]};
 
     const bindHander = (event, target, fuc) => {
       if (target) {
@@ -50,7 +55,10 @@ $.extend(Plugin.prototype, {
       }
     }
 
-    bindHander('mousedown', this.settings.target, (e) => this.startDrage(e))
+    bindHander('mousedown', this.settings.target, (e) => {
+      this.startDrage(e);
+      e.preventDefault(); // 去除默认行为，不然会选中其他文字
+    })
 
   },
   setState: function (obj, cb) {
@@ -106,12 +114,13 @@ $.extend(Plugin.prototype, {
       _state.disY = _nY - _sY
 
       const _range = this.GLOBAL.range;
+      //限制滚动区域
       if(this.settings.container){
         if(moveLeft < _range.left ) moveLeft = _range.left
         if(moveTop < _range.top) moveTop = _range.top
       }
 
-      console.log(moveLeft,this.GLOBAL.range.left)
+      console.log(this.$element)
 
       const $el = this.settings.$handleDrage
       const func = {
@@ -120,7 +129,7 @@ $.extend(Plugin.prototype, {
         'default': function () {$el.css({left: moveLeft, top: moveTop})},
       }
 
-      func[this.settings.direction]()
+      func[this.settings.axis]()
 
       this.settings.onDraging && this.settings.onDraging.call($el[0], _state)
     }

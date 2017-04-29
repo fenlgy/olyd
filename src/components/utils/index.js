@@ -61,5 +61,6 @@ module.exports = {
     classnames: require('classnames'),
     moment: require('moment'),
     inArray:inArrary,
-    installExtensions: installExtensions
+    installExtensions: installExtensions,
+  keycode:require('./keycode')
 }

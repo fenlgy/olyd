@@ -229,7 +229,7 @@ class Table {
     let $col = null
     $table.olyDrage({
       target: '.col-resize-handle',
-      direction: 'x',
+      axis: 'x',
       container:function () {
         const index = $(this).attr('data-index');
         return $table.find('th[data-col-index='+ index +']')
