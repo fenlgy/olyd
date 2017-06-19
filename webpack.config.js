@@ -40,7 +40,11 @@ module.exports = {
         test: /\.less$/,
         // loader: 'style!css!postcss!less'
         loader: ExtractTextPlugin.extract('style','css!postcss!less')
-      }
+      },
+        {
+          test:/\.(gif|png|jpg|jpeg)/,
+            loader:'url'
+        }
     ],
   },
   postcss: function () {

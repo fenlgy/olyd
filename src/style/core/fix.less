@@ -1,0 +1,39 @@
+//修复浏览器中的一些bug
+/**
+ * 1. 去除 IE6-9 和 Firefox 3 中 a 内部 img 元素默认的边框
+ * 2. 修正 IE8 图片消失bug
+ * 3. 防止 img 指定「height」时图片高度不能按照宽度等比缩放，导致图片变形
+      http://jsbin.com/aJoTUca/2
+ * 4. 让图片支持响应式
+ * 5. 去除现代浏览器图片底部的空隙
+ * 6. 修复 IE7 图片缩放失真
+ */
+img {
+  border: 0 none; /* 1 */
+  width: auto\9; /* 2 */
+  height: auto; /* 3 */
+  max-width: 100%; /* 4 */
+  vertical-align: top;/* 5 */
+  -ms-interpolation-mode: bicubic; /* 6 */
+}
+
+
+/**
+ * 1.移除 OS X 中 Safari5 和 Chrome 搜索框内侧的左边距
+ * 2.如果需要隐藏清除按钮需要加上
+   input[type="search"]::-webkit-search-cancel-button
+ */
+input[type="search"]::-webkit-search-decoration /* 1 */
+{
+  -webkit-appearance: none;
+}
+
+//label 元素默认光标设为「手型」，暗示此处可点击。
+label {
+  cursor: pointer;
+}
+
+//解决 checkbox、radio和文字对不齐
+//input[type="checkbox"],input[type="radio"]{
+//  vertical-align:middle; margin-top:-2px; margin-bottom:1px;
+//}

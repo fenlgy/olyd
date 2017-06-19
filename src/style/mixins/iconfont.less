@@ -1,0 +1,31 @@
+.iconfont-mixin() {
+  display: inline-block;
+  font-style: normal;
+  vertical-align: baseline;
+  text-align: center;
+  text-transform: none;
+  text-rendering: auto;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.set-icon-content(@content){
+  &:before{
+    content: @content;
+  }
+}
+
+.set-icon-before(@content){
+  &:before{
+    font-family:'iconfont';
+    content: @content;
+  }
+}
+
+.set-icon-after(@content){
+  &:after{
+    font-family:'iconfont';
+    content: @content;
+  }
+}

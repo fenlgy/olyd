@@ -1,0 +1,21 @@
+@{css-prefix}-helper{
+  box-sizing: content-box;
+  position: fixed;
+  right:0;
+  bottom:30%;
+  width: 12px;
+  padding:8px 4px;
+  background: #666;
+  color: #fff;
+  text-align: center;
+  line-height: 1.2;
+  z-index:@zindex-affix;
+  border-top-left-radius: @border-radius-base;
+  border-bottom-left-radius: @border-radius-base;
+  cursor: pointer;
+
+  &:hover{
+    background: @primary-color;
+  }
+
+}

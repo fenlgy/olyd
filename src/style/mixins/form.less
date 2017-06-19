@@ -1,0 +1,31 @@
+.form-control-validation(@text-color: @input-color; @border-color: @input-border-color; @background-color: @input-bg) {
+  .@{css-prefix}form-explain{
+    color: @text-color;
+  }
+  // 输入框的不同校验状态
+  .@{css-prefix}input {
+    border-color: @border-color;
+    box-shadow: 0 0 0 2px tint(@border-color, 80%);
+
+    &:not([disabled]):hover {
+      border-color: @border-color;
+    }
+  }
+
+  // .@{calendar-prefix-cls}-picker-open .@{calendar-prefix-cls}-picker-input {
+  //   box-shadow: 0 0 0 2px tint(@border-color, 80%);
+  // }
+
+  // .@{css-prefix}input-group-addon {
+  //   color: @text-color;
+  //   border-color: @border-color;
+  //   background-color: @background-color;
+  // }
+
+  .@{css-prefix}datepicker-input-wrapper{
+    border-color: @border-color;
+    box-shadow: 0 0 0 2px tint(@border-color, 80%);
+  }
+}
+
+

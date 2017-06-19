@@ -1,0 +1,137 @@
+@classname:  ~"@{css-prefix}-table";
+
+.@{classname} {
+  border-collapse: collapse;
+  min-width: 100%;
+  text-align: left;
+
+
+  &__wrapper {
+    position: relative;
+    border:1px solid #eee;
+  }
+
+  th {
+    background: #fafafa;
+  }
+
+  td, th {
+    border-left: 1px solid #eee;
+    padding: 4px;
+
+    &:first-child{
+      border-left:none;
+    }
+  }
+
+  tr{
+    border-bottom:1px solid #eee;
+  }
+
+  tbody tr {
+    //&:nth-child(even) {
+    //  background: #fafafa;
+    //}
+
+
+    .icon-expanded{
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    &:hover {
+      background: @tr-hover-bg;
+    }
+  }
+
+  &__head{
+    width: 100%;
+    overflow: hidden;
+  }
+
+  &__body{
+    height: 300px;
+    min-height: 200px;
+    overflow: auto;
+  }
+
+  &__fixed-thead {
+  }
+
+  &__th-checkbox {
+    width: 30px;
+    text-align: center;
+  }
+
+  &--fixed{
+    table-layout: fixed;
+    width: 0;
+
+    td,th{
+      //position: relative; 会引起苹果下拖动列，不会渲染td的线
+      overflow:hidden;word-break:break-all;text-overflow: ellipsis;white-space: nowrap;
+    }
+  }
+
+  &__th--actived{
+
+  }
+}
+
+.col-resize-handle{
+  position: absolute;
+  bottom:0;
+  width: 9px;
+  height: 100%;
+  background: #fff;
+  opacity:0; // 背景如果设为 ransparnet 则会导致低版本ie 难以被选中
+  cursor: col-resize;
+}
+
+.sort-icon{
+  float: right;
+  width: 16px;
+  cursor: pointer;
+  color: #999;
+
+  &__up,&__down{
+    float: right;
+    width: 16px;
+    height: 12px;
+  }
+
+  &__down{
+    margin-top: -6px;
+  }
+
+  &--ace{
+    .sort-icon{
+      &__down{
+        color: @primary-color;
+      }
+    }
+  }
+
+  &--desc{
+    .sort-icon{
+      &__up{
+        color: @primary-color;
+      }
+    }
+  }
+
+}
+
+.th__filter{
+  cursor: pointer;
+  float: right;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  margin-top:1px;
+  color: #999;
+
+  &--active,&:hover{
+    color: @primary-color;
+  }
+}

@@ -1,0 +1,105 @@
+@import "../mixins/iconfont";
+
+// font-face
+// @icon-url： 字体源文件的地址
+@font-face {
+  font-family: 'iconfont';
+  src: url('@{icon-url}.eot'); /* IE9*/
+  src: url('@{icon-url}.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('@{icon-url}.woff') format('woff'), /* chrome、firefox */
+  url('@{icon-url}.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  url('@{icon-url}.svg#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.icon,i{
+  font-family:"iconfont";
+ .iconfont-mixin();
+}
+
+//齿轮，设置
+.icon-config{.set-icon-content('\e60b');  }
+//客服
+.icon-kefu{.set-icon-content('\e607'); }
+//问号
+.icon-wenhao{.set-icon-content('\e60a'); }
+//结构图
+.icon-jiegou{.set-icon-content('\e608'); }
+//结构图
+.icon-swhich-software{.set-icon-content('\e631'); }
+//铃铛
+.icon-lingdang{.set-icon-content('\e61d'); }
+//窗口最大
+.icon-window-max{.set-icon-content('\e626'); }
+//窗口缩小
+.icon-window-small{.set-icon-content('\e625'); }
+
+//箭头不带横线
+.icon-arrow-down{.set-icon-content('\e618');}
+.icon-arrow-right{.set-icon-content('\e619');}
+.icon-arrow-up{.set-icon-content('\e617');}
+.icon-arrow-up--solid{.set-icon-content('\e67f');}
+.icon-arrow-down--solid{.set-icon-content('\e78c');}
+
+//箭头带横线
+.icon-arrow--right{.set-icon-content('\e61f')}
+//实心箭头
+.icon-arrow--down-solid{.set-icon-content('\e78c')}
+.icon-arrow--up-solid{.set-icon-content('\e67f')}
+
+//加减
+.icon-plus--box{.set-icon-content('\e64c')}
+.icon-reduce--box{.set-icon-content('\e65b')}
+//home
+.icon-home{.set-icon-content('\e602')}
+//委托
+.icon-weituo{.set-icon-content('\e60c')}
+//业务
+.icon-yewu{.set-icon-content('\e606')}
+//结算
+.icon-jiesuan{.set-icon-content('\e604')}
+//费率
+.icon-feilv{.set-icon-content('\e633')}
+//报表
+.icon-baobiao{.set-icon-content('\e632')}
+//发票
+.icon-fapiao{.set-icon-content('\e62b')}
+//订单
+.icon-dingdan{.set-icon-content('\e634')}
+//基础资料
+.icon-jichuziliao{.set-icon-content('\e629')}
+//公司
+.icon-gongsi{.set-icon-content('\e624')}
+//快捷菜单
+.icon-sofeware{.set-icon-content('\e630')}
+//运价管理
+.icon-yunjiaguanli{.set-icon-content('\e633')}
+//客户管理 CRM
+.icon-crm{.set-icon-content('\e62c')}
+//只能分析 BI
+.icon-bi{.set-icon-content('\e632')}
+//系统设置
+.icon-systemconfig{.set-icon-content('\e62d')}
+
+//旗帜产品更新
+.icon-qizhi{.set-icon-content('\e61b')}
+
+.icon-close{.set-icon-content('\e60e')}
+//圆点
+.icon-dot{.set-icon-content('\e69b')}
+.icon-middot{.set-icon-content('\e639')}
+.icon-circle{.set-icon-content('\e63a')}
+
+//
+.icon-plus—box{.set-icon-content('\e64c')}
+.icon-reduce—box{.set-icon-content('\e65b')}
+
+.icon-selected{.set-icon-content('\e678')}
+//拖动
+.icon-drag{.set-icon-content('\e60f')}
+
+//过滤漏斗
+.icon-filter{.set-icon-content('\e675')}
+.icon-filter--soild{.set-icon-content('\e674')}
+
+//
+.icon-hook {.set-icon-content('\e6c1')}

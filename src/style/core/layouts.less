@@ -1,0 +1,51 @@
+// Grid system
+.grid-container{
+	.container-fixed();
+}
+
+.row {
+  display: block;
+  .make-row();
+}
+
+.make-grid();
+
+
+// Extra small grid
+//
+// Columns, offsets, pushes, and pulls for extra small devices like
+// smartphones.
+//.make-grid(-xs);
+
+// Small grid
+.make-grid(-sm);
+
+// Medium grid
+@media (min-width: @screen-md-min) {
+  .make-grid(-md);
+}
+
+// Large grid
+@media (min-width: @screen-lg-min) {
+  .make-grid(-lg);
+}
+
+
+//sidebar 固定布局
+.fix-side{
+	&-layout{
+		position: relative;
+		margin-right: auto;
+		margin-left: auto;
+
+	&-sidebar{
+		position: absolute;
+		left: 0;
+		top:0;
+		width: 300px;
+	}
+	&-content{
+		margin-left: 300px;
+	}
+	}
+}

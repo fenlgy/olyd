@@ -1,0 +1,265 @@
+// Prefix classname
+@css-prefix             : oly;
+
+// Color
+@primary-color          : #0086ec; //#2196f3; // 42BFB4
+@gray-color             : #cccccc;
+@info-color             : #00AFFF;
+@success-color          : #00B233;
+@error-color            : #FF2424;
+@warning-color          : #ff6400;//#FFBA00;
+
+// framework
+@themes-color           :#0086ec;//1575d4 蓝色 //249c9c 绿色 //2A3F54 商务深蓝灰 //333C44 深灰 // 西瓜绿 42BFB4
+@layout-padding         :16px;
+//左侧 sidebar
+@sidebar-width          :180px;
+@sidebar-width-min      :48px;
+
+// ICONFONT
+@iconfont-css-prefix    : ~"@{css-prefix}icon";
+@icon-url               : "//at.alicdn.com/t/font_zrvoxtkp2aoiggb9";
+
+//panel
+@panel-shadow           :0 3px 5px darken(@body-background,5%);
+@panel-border-color     :darken(@body-background,10%);
+@panel-padding          :16px;
+@panel-padding-small    :8px;
+@panel-padding-large    :24px;
+// ------ Base & Require ------
+@body-background        : tint(@themes-color,92%);
+@font-family            : "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+@code-family            : Consolas,Menlo,Courier,monospace;
+@text-color             : #5b788e;
+@text-color-darken      : shade(@text-color,30%);
+@text-color-lighten     : tint(@text-color,30%);
+@font-size-base         : 12px;
+@line-height-base       : 1.5;
+@line-height-computed   : floor((@font-size-base * @line-height-base));
+@border-radius-base     : 3px;
+@border-radius-sm       : 2px;
+
+                          
+            
+// LINK
+@link-color             : @primary-color;
+@link-hover-color       : tint(@primary-color,15%);
+@link-active-color      : shade(@link-color, 5%);
+@link-hover-decoration  : none;
+//@list-hover-color       : shade(tint(@primary-color,95%),4%);
+
+// Disabled cursor for form controls and buttons.
+@cursor-disabled        : not-allowed;
+
+// Animation
+@ease-out            : cubic-bezier(0.215, 0.61, 0.355, 1);
+@ease-in             : cubic-bezier(0.55, 0.055, 0.675, 0.19);
+@ease-in-out         : cubic-bezier(0.645, 0.045, 0.355, 1);
+@ease-out-back       : cubic-bezier(0.12, 0.4, 0.29, 1.46);
+@ease-in-back        : cubic-bezier(0.71, -0.46, 0.88, 0.6);
+@ease-in-out-back    : cubic-bezier(0.71, -0.46, 0.29, 1.46);
+@ease-out-circ       : cubic-bezier(0.08, 0.82, 0.17, 1);
+@ease-in-circ        : cubic-bezier(0.6, 0.04, 0.98, 0.34);
+@ease-in-out-circ    : cubic-bezier(0.78, 0.14, 0.15, 0.86);
+@ease-out-quint      : cubic-bezier(0.23, 1, 0.32, 1);
+@ease-in-quint       : cubic-bezier(0.755, 0.05, 0.855, 0.06);
+@ease-in-out-quint   : cubic-bezier(0.86, 0, 0.07, 1);
+
+// Border color
+@border-color-base      : #d9d9d9;        // base border outline a component
+@box-shadow-base        : 0 0 4px rgba(0, 0, 0, 0.17);
+@border-color-split     : #e9e9e9;        // split border inside a component
+
+//tips
+@tips-bgc                :shade(@themes-color,80%);
+
+// Buttons
+@btn-font-weight        : normal;
+
+@btn-primary-color      : #fff;
+@btn-primary-bg         : @primary-color;
+@btn-group-border       : shade(@primary-color,10%);
+
+@btn-warning-color      : #fff;
+@btn-warning-bg         : @warning-color;
+
+@btn-error-color        : #fff;
+@btn-error-bg           : @error-color;
+
+@btn-success-color      : #fff;
+@btn-success-bg         : @success-color;
+
+@btn-default-color      : @text-color;
+@btn-default-bg         : #fff;
+@btn-default-border     : @border-color-base;
+
+@btn-ghost-color        : @text-color;
+@btn-ghost-bg           : transparent;
+@btn-ghost-border       : @border-color-base;
+
+@btn-disable-color      : #ccc;
+@btn-disable-bg         : #f4f4f4;
+@btn-disable-border     : #f4f4f4;
+
+@btn-padding-base       : 3px 12px;
+
+@btn-font-size-lg       : 14px;
+@btn-padding-lg         : 4px 20px 5px 20px;
+
+@btn-padding-sm         : 1px 8px;
+
+@btn-circle-size        : 28px;
+@btn-circle-size-lg     : 32px;
+@btn-circle-size-sm     : 22px;
+
+
+//checkbtn
+@checkbtn-height         : 30px;
+@checkbtn-disable-color  : #ccc;
+@checkbtn-disable-bg     : #f4f4f4;
+@checkbtn-disable-border : @border-color-base;
+
+//spinner
+@spinner-border          : #989898;
+@spinner-text-border     : shade(@gray-color,40%);
+@spinner-hover-border    : tint(@link-color, 20%);
+
+// Media queries breakpoints
+// Extra small screen / phone
+@screen-xs              : 480px;
+@screen-xs-min          : @screen-xs;
+@screen-xs-max          : (@screen-xs-min - 1);
+
+// Small screen / tablet
+@screen-sm              : 768px;
+@screen-sm-min          : @screen-sm;
+@screen-sm-max          : (@screen-sm-min - 1);
+
+// Medium screen / desktop
+@screen-md              : 992px;
+@screen-md-min          : @screen-md;
+@screen-md-max          : (@screen-md-min - 1);
+
+// Large screen / wide desktop
+@screen-lg              : 1200px;
+@screen-lg-min          : @screen-lg;
+@screen-lg-max          : (@screen-lg-min - 1);
+
+// Layout and Grid system
+@grid-width             : 1200px;
+@grid-columns           : 24;
+@grid-gutter-width      : 10px;
+
+// Container sizes
+@container-sm           : (720px + @grid-gutter-width);
+@container-md           : (940px + @grid-gutter-width);
+@container-lg           : (1140px + @grid-gutter-width);
+
+// z-index list
+@zindex-affix           : 10;
+@zindex-modal-mask      : 990;
+@zindex-modal           : 1000;
+@zindex-notification    : 1010;
+@zindex-message         : 1010;
+@zindex-popover         : 1030;
+@zindex-picker          : 1050;
+@zindex-dropdown        : 1050;
+@zindex-tooltip         : 1060;
+
+// Form
+// --------------------------------
+// Legend
+@legend-color                : #999;
+@legend-border-color         : @border-color-base;
+// Label
+@label-required-color        : #f50;
+@label-color                 : @text-color;
+// Input
+@input-height-base: 26px;
+@input-height-lg: 32px;
+@input-height-sm: 22px;
+
+@input-padding-horizontal-base  : 7px;
+@input-padding-horizontal-lg   : 8px;
+@input-padding-horizontal-sm   : 4px;
+@input-padding-vertical-base : 0;
+@input-padding-vertical-sm   : 0;
+@input-padding-vertical-lg   : 0;
+
+@input-placeholder-color     : #ccc;
+@input-color                 : @text-color;
+@input-border-color          : @border-color-base;
+@input-bg                    : #fff;
+
+@input-hover-border-color    : @primary-color;
+@input-focus-border-color    : @primary-color;
+@input-disabled-bg           : #f4f4f4;
+@input-disabled-color        : #ccc;
+
+@form-item-margin-bottom     : 20px;
+
+
+//datepicker
+@date-border-color            : @border-color-base;
+@date-base-color              : @primary-color;
+@date-week-color              : #ccc;
+
+
+//dropdown
+@dropdown-hover-color         : tint(@primary-color,90%);
+@dropdown-active-color         :@primary-color;
+@dropdown-box-shadow          : 0 2px 6px rgba(0,0,0,.15);
+
+
+//scrollbar
+@scrollbar-bg                  : tint(@gray-color,80%);
+@scrollbar-dragger             : @gray-color;
+@scrollbar-dragger-disable     : #e9e9e9;
+
+
+//tooltip
+@tooltip-bg                     :shade(@gray-color,80%);
+@tooltip-border-color           :@tooltip-bg;
+@tooltip-text-color             :#fff;
+
+@tooltip-rich-bg                :#fff;
+@tooltip-rich-border            :@border-color-base;
+
+
+//flipswitch
+@flipswitch-bg                  :@primary-color;
+@flipswitch-off-bg              :tint(@gray-color,60%);
+@flipswitch-on-color            :#fff;
+@flipswitch-off-color           :#fff;
+@flipswitch-ball-color          :#fff;
+
+@flipswitch-disable-color       :@gray-color;
+@flipswitch-disable-ball        :@gray-color;
+
+//doublelist
+@doublelist-font-color           :@text-color;
+@doublelist-bg                   :tint(@gray-color,80%);
+@doublelist-hover-bg             :tint(@gray-color,80%);
+@doublelist-active-bg            :@primary-color;
+@doublelist-hover-bg             :tint(@gray-color,80%);
+@doublelist-disable-bg           :#fff;
+@doublelist-button-bg            :@primary-color;
+
+//pager
+@pager-bg                        : #fff;
+@pager-active-bg                 :@primary-color;
+
+//tab
+@tab-bg                          :#fff;
+@tab-hover-bg                    :#fff;
+@tab-disable-bg                  :#f4f4f4;
+@tab-active-border               :@primary-color;
+@tab-colse-color                 :#666;
+@tab-colse-hover                 :#dedede;
+@tab-color                       :#515151;
+@tab-color-hover                 :@primary-color;
+@tab-color-active                :@primary-color;
+@tab-color-disable               :#ccc;
+
+// table
+@tr-hover-bg                     :tint(@primary-color,92%);

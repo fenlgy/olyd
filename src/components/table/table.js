@@ -14,7 +14,7 @@ var pluginName = 'olyTable',
   pluginClassName = 'oly-table',
   defaults = {
     size: 'normal',
-    // className: "oly-table",
+    className: '',
     rowActiveClass: 'acti',
     columns: null,
     dataSource: null,
@@ -25,10 +25,11 @@ var pluginName = 'olyTable',
     scroll: false,
     autoColWith: true, // 主要用于设置是否设置为 table-layout 为 fixed
     headFixed: false,
-    showThead: true, // 显示 thead
+    //showThead: true, // 显示 thead
     rowSelection: false, // 是否带check box
     showHeader: true,
     height: '400px',
+    // expandedRowRender:val => val.email, // 行点击展开的内容
     sortOder: 'asc', // more所有的排序方式，可在columns 中自定义每一个
     // afterUpdata
   }
@@ -51,7 +52,7 @@ const _cls = {
 // Plugin.VERSION = '0.0.1';
 
 class Table {
-  constructor (element, options) {
+  constructor(element, options) {
     this.$element = element
     // 将默认属性对象和传递的参数对象合并到第一个空对象中
     this.settings = $.extend({}, defaults, options)
@@ -59,17 +60,20 @@ class Table {
     this._name = pluginName
     //放置一些全局要用的变量，如jquery 对象
     this.GLOBAL = {
-      isFirstRender:true
+      isFirstRender: true
     }
     this._cached = {}
     this.state = {}
     this.render()
   }
 
-  init () {
+  init() {
 
     // 标准化数据
-    this.normalizeColumns()
+    this.normalizeColumns();
+    // 缓存一份数据用于筛选重置
+    this._cached.dataSource = this.settings.dataSource;
+
 
     const _G = this.GLOBAL;
     const thead = this.getThead(),
@@ -86,15 +90,15 @@ class Table {
       }
     )
 
-    function getTable (con) {
+    function getTable(con) {
       return `<table class="${className}">${colgroup}${con}</table>`
     }
 
-    function getWrapper (con) {
+    function getWrapper(con) {
       return `<div class="${_cls.wrapper}"><div class="${_cls.container}">${con}</div></div>`
     }
 
-    let html = ''
+    let html = '';
 
     if (isheadFixed) {
       html = getWrapper(`<div class="${_cls.head}">${getTable(thead)}</div><div class="${_cls.body}">${getTable(tbody)}</div>`)
@@ -114,21 +118,25 @@ class Table {
     _G.$colgroup = _G.$table.find('colgroup');
 
     // 如果没有设置 Col 的值，则把对应 th 的宽度设给他，没值的时候拖动有问题，会跳跃
-    _G.$table.find('.J-col').each(function (index) {
-      const w = $(this).outerWidth();
-      const $col = _G.$colgroup.find('col:eq('+ index +')');
-      $col.width() || $col.width(w)
-    })
+    // _G.$table.find('.J-col').each(function (index) {
+    //   const w = $(this).outerWidth();
+    //   const $col = _G.$colgroup.find('col:eq('+ index +')');
+    //   $col.width() || $col.width(w)
+    // })
 
     _G.isFirstRender = false;
 
   }
 
+  generateHtml() {
+
+  }
+
   // render 是指把表格的主体部分放到 html 中
-  render (type) {
+  render(type) {
     // type 为 ture 只更新body
-    if(type){
-      this.updataBody();
+    if (type) {
+      this.update();
       return
     }
 
@@ -137,21 +145,21 @@ class Table {
     this.afterRender()
   }
 
-  beforeRender () {
+  beforeRender() {
     this.settings.beforeRender && this.settings.beforeRender($(this.$element))
   }
 
 // 组件渲染完成后执行，可以在这里初始化其他组件
-  afterRender () {
-    this.initColResize()
+  afterRender() {
+    this.initColResize();
     this.bindHandler();
-
+    this.initFilter()
 
     this.settings.afterRender && this.settings.afterRender($(this.$element));
   }
 
-  //用于排序，增加删除行
-  updataBody () {
+  //用于排序，增加删除行,只跟新body部分
+  update() {
     console.log('body')
     const _G = this.GLOBAL
     const $tbody = $(this.getTbody())
@@ -160,20 +168,19 @@ class Table {
   }
 
   // 对外接受数据的更新
-  setter (data, func) {
-    const _settings = this.settings,
-      columns = data.columns,
-      dataSource = data.dataSource
+  setState(data, cb) {
+    const _settings = this.settings;
+    const {columns,dataSource} = data;
 
     dataSource && (_settings.dataSource = dataSource)
     columns && (_settings.columns = columns)
 
     this.render(!columns)
 
-    func && func()
+    cb && cb()
   }
 
-  initColResize () {
+  initColResize() {
 
     if (!this.settings.colResize) {
       return
@@ -182,7 +189,7 @@ class Table {
     const $table = this.GLOBAL.$table
     const _this = this
 
-    function getColResize () {
+    function getColResize() {
       let colResizeHandle = ''
       _this.GLOBAL.compilerColumns.forEach((x, i) => {
         // console.log($element.find('col').eq(index).width())
@@ -204,7 +211,7 @@ class Table {
 
     const setColResizeProps = (needTop) => {
       let colX = 0
-      $useTh.each(function (index,aa) {
+      $useTh.each(function (index, aa) {
         const h = $(this).outerHeight()
         colX += $(this).outerWidth()
 
@@ -230,9 +237,9 @@ class Table {
     $table.olyDrage({
       target: '.col-resize-handle',
       axis: 'x',
-      container:function () {
+      container: function () {
         const index = $(this).attr('data-index');
-        return $table.find('th[data-col-index='+ index +']')
+        return $table.find('th[data-col-index=' + index + ']')
       },
       onDrageStart: function () {
         const index = $(this).attr('data-index')
@@ -250,23 +257,23 @@ class Table {
 
   }
 
-  destroy () {
+  destroy() {
     console.log(this)
   }
 
-  bindHandler () {
+  bindHandler() {
     const _this = this
     let select = []
     const $table = this.GLOBAL.$table
 
     // tr 点击事件
     $table.on('click', 'tbody tr', function () {
-      const index = $(this).attr(pluginName + '-tr-index')
+      const index = $(this).attr(pluginName + '-tr-index');
 
       $(this).addClass(_this.settings.rowActiveClass)
 
       // 调 onRowClick 时间，第一个参数当前tr的jquery对象 ，第二个参数：当前行的数据对象
-      _this.settings.onRowClick && _this.settings.onRowClick($(this), _this.settings.dataSource[index])
+      _this.settings.onRowClick && _this.settings.onRowClick(this, _this.settings.dataSource[index])
     })
     // checkbox 选择事件
       .on('click', 'input:checkbox', function () {
@@ -294,15 +301,44 @@ class Table {
         }
       })
       // 排序
-      .on('click', '.J-col-sort', (e) => this.handlerSort(e))
+      .on('click', '.sort-icon', (e) => this.handlerSort(e))
+      // 展开搜索，全部
+      .on('click','.icon-expanded',function () {
+        const $tr = $(this).parent().parent();
+
+        if($(this).hasClass('icon-plus--box')){
+          $(this).removeClass('icon-plus--box').addClass('icon-reduce--box');
+          const index = $tr.attr(`${pluginName}-tr-index`);
+          console.log(index)
+          const val = _this.settings.dataSource[index];
+          const con = _this.getExpanedRow(val);
+          $tr.after(con)
+
+        }else {
+          $(this).removeClass('icon-reduce--box').addClass('icon-plus--box');
+          $tr.next().remove();
+        }
+
+      });
+
+    // 如果头部浮动，则把 body 部分左右滚动同步到头部
+    if(this.settings.headFixed){
+      const $tbodyContainer  = this.GLOBAL.$tbody.parent().parent();
+      const $theadContainer = this.GLOBAL.$thead.parent().parent();
+      $tbodyContainer.scroll(function () {
+        const scrollLeft = $(this).scrollLeft();
+        $theadContainer[0].scrollLeft = scrollLeft
+      })
+    }
+
   }
 
-  setState (obj, cb) {
+  setState(obj, cb) {
     $.extend(this.state, obj)
     cb && $.isFunction(cb) && cb()
   }
 
-  _cache (name, val) {
+  _cache(name, val) {
     if (name in this._cached) {
       return this._cached[name]
     }
@@ -312,7 +348,7 @@ class Table {
     return this._cached[name]
   }
 
-  groupedColumns (columns) {
+  groupedColumns(columns) {
     const _groupColumns = (columns, currentRow = 0, parentColumn = {}, rows = []) => {
       // 获取行数
       rows[currentRow] = rows[currentRow] || []
@@ -331,12 +367,12 @@ class Table {
       }
 
       columns.forEach((column, index) => {
-        const newColumn = {...column}
-        rows[currentRow].push(newColumn)
-        parentColumn.colSpan = parentColumn.colSpan || 0
+        const newColumn = {...column};
+        rows[currentRow].push(newColumn);
+        parentColumn.colSpan = parentColumn.colSpan || 0;
 
         if (newColumn.children && newColumn.children.length > 0) {
-          newColumn.children = _groupColumns(newColumn.children, currentRow + 1, newColumn, rows)
+          newColumn.children = _groupColumns(newColumn.children, currentRow + 1, newColumn, rows);
           parentColumn.colSpan = parentColumn.colSpan + newColumn.colSpan
         } else {
           parentColumn.colSpan++
@@ -352,17 +388,18 @@ class Table {
           setRowSpan(newColumn)
         }
         grouped.push(newColumn)
-      })
+      });
       return grouped
     }
     return _groupColumns(columns)
 
   }
 
-  getHeaderRows (columns, currentRow = 0, rows = []) {
+  //实际用于渲染的 header 数据
+  getHeaderRows(columns, currentRow = 0, rows = []) {
     rows[currentRow] = rows[currentRow] || []
 
-    columns.forEach((column, index) => {
+    columns.forEach(column => {
       if (column.rowSpan && rows.length < column.rowSpan) {
         while (rows.length < column.rowSpan) {
           rows.push([])
@@ -379,6 +416,10 @@ class Table {
         $.extend(cell, {sort: column.sort})
       }
 
+      if (column.filter) {
+        $.extend(cell, {filter: column.filter})
+      }
+
       if (column.children) {
         this.getHeaderRows(column.children, currentRow + 1, rows)
       }
@@ -391,7 +432,7 @@ class Table {
       if (cell.colSpan !== 0) {
         rows[currentRow].push(cell)
       }
-    })
+    });
     return rows.filter(row => row.length > 0)
   }
 
@@ -399,7 +440,7 @@ class Table {
 // colums 为转换后的按行分类的数组
 // compilerColumns 为只剩下对应下面 td 的数组
 // normalizeColumns 为在来源数组的基础上加上自定义配置后的数组
-  normalizeColumns () {
+  normalizeColumns() {
 
     const columns = this.getHeaderRows(this.groupedColumns(this.settings.columns))
     // 添加序号、checkbox 等的列,并缓存
@@ -410,7 +451,7 @@ class Table {
 
     this.getExtraCol().forEach(val => {
       normalizeColumns.unshift(val)
-    })
+    });
 
     this.GLOBAL.normalizeColumns = normalizeColumns
 
@@ -431,28 +472,117 @@ class Table {
     return compilerColumns
   }
 
-  wrapTag (str, tag) {
+  wrapTag(str, tag) {
     return `<${tag}>${str}</${tag}>`
   }
 
-  handlerSort (e) {
-    const index = $(e.currentTarget).attr('data-col-index')
-    const settingData = this.GLOBAL.compilerColumns
-    let data = settingData[index]
+  handlerSort(e) {
+    const className = 'sort-icon';
+    const aceClass = className + '--ace';
+    const descClass = className + '--desc';
+    // 当前的排序图标
+    const $cur = $(e.currentTarget);
+    // 除了自己外的 排序 图标
+    const $other = this.GLOBAL.$thead.find('.' + className).not($cur);
+    const index = $cur.parent().attr('data-col-index');
+    const settingData = this.GLOBAL.compilerColumns;
+    let data = settingData[index];
 
+    //把其他的排序设为
     settingData.forEach((data, i) => {
       data.toSort && (data.toSort = false)
       if (index != i) {
         data.sortOder = undefined
       }
-    })
+    });
 
-    data.toSort = true
+
+    $other.removeClass(aceClass + ' ' + descClass);
+
+    if ($cur.hasClass(aceClass)) {
+      $cur.removeClass(aceClass).addClass(descClass)
+    } else {
+      $cur.removeClass(descClass).addClass(aceClass)
+    }
+
+    data.toSort = true;
 
     this.initSort()
   }
 
-  initSort () {
+  initFilter() {
+    const that = this;
+    if (!$.fn.olyDropdown) {
+      require('../dropdown');
+    }
+
+    const $filter = this.GLOBAL.$thead.find('.th__filter');
+    this.GLOBAL.$filter = $filter;
+
+    $filter.each(function () {
+      const index = $(this).parent().attr('data-col-index');
+      const key = that.GLOBAL.compilerColumns[index].dataIndex;
+      const _data = that.settings.dataSource.map(item => item[key]);
+      // 去重，排序，格式化成对象数组
+      const dataSource = _utils.uniq(_data).sort().map(item => {
+        return {text: item}
+      });
+
+      $(this).olyDropdown({
+        dataSource,
+        // onVisibleChange:item => console.log(item),
+        // 单选
+        // onSelect:(item,index) => that.onFilter([index],dataSource,key,$(this)),
+        // 多选
+        needConfirm: true,
+        onConfirm: item => that.onFilter(item, dataSource, key, $(this)),
+        onCancel: () => {
+          // 重置选中状态
+          if ($(this).hasClass('th__filter--active')) {
+            $(this).olyDropdown('setState', {selected: []});
+            that.onFilter('reset');
+          }
+        }
+      })
+    })
+  }
+
+  onFilter(arr, data, key, $this) {
+    const activeCls = 'th__filter--active';
+    const $filter = this.GLOBAL.$filter;
+    $filter.removeClass(activeCls);
+
+    // 重置
+    if (arguments[0] === 'reset') {
+      this.settings.dataSource = this._cached.dataSource;
+      this.update();
+      return
+    }
+
+    // 没有选中值不触发
+    if (arr.length > 0) {
+      // 其他的漏斗状态设为未选中
+      $filter.not($this).each(function () {
+        $(this).olyDropdown('setState', {selected: []});
+      });
+
+      const val = _utils.getArrFromIndex(data, arr);
+      this.settings.dataSource = this._cached.dataSource;
+
+      const _data = this.settings.dataSource.filter(item => {
+        return val.some(v => v.text == item[key]);
+      });
+
+      $this.addClass(activeCls)
+      this.settings.dataSource = _data;
+
+      this.update()
+    }
+
+
+  }
+
+  initSort() {
     const settingData = this.GLOBAL.compilerColumns
     const dataSource = this.settings.dataSource
 
@@ -488,8 +618,9 @@ class Table {
     this.render(true)
   }
 
-  getExtraCol () { //增加序号，checkbox 等额外的列
-    const extraCol = []
+  getExtraCol() { //增加序号，checkbox 等额外的列
+    const extraCol = [];
+
     if (this.settings.rowSelection) {
       extraCol.push({
         title: `<input type="checkbox" class="j-checkbox-all" />`,
@@ -510,10 +641,21 @@ class Table {
       })
     }
 
+    // icon-plus--box
+    if(this.settings.expandedRowRender){
+      extraCol.push({
+        title: ``,
+        className: pluginClassName + '__th-checkbox',
+        render: () => {
+          return `<i class="icon-expanded icon-plus--box"></i>`
+        }
+      })
+    }
+
     return extraCol
   }
 
-  setExtraCol (columns) {
+  setExtraCol(columns) {
     const maxRowSpan = columns.length
     let newColums = columns
     const extraCol = this.getExtraCol()
@@ -526,14 +668,14 @@ class Table {
     return newColums
   }
 
-  getThead () {
-    let _this = this
-    let rows = ''
+  getThead() {
+    let _this = this;
+    let rows = '';
 
     const _getTh = (columns, row = '') => {
 
       columns.forEach(col => {
-        let _th = col.title
+        let _th = col.title;
 
         if (!col.colSpan) {
           _this.GLOBAL.compilerColumns.forEach(function (thatCol, i) {
@@ -544,10 +686,13 @@ class Table {
           })
         }
 
-        //TODO 排序，晒选等内容
-        if (col.sort) {
-          _th += `<a href="javascript:">#</a>`
+        if (col.filter) {
+          _th += `<i class="icon-filter th__filter"></i>`
+        }
 
+        // 排序
+        if (col.sort) {
+          _th += `<div class="sort-icon"><i class="icon-arrow--up-solid sort-icon__up"></i><i class="icon-arrow--down-solid sort-icon__down"></i></div>`
         }
 
         const colspan = _utils.IF(col.colSpan, 'colspan')
@@ -558,67 +703,70 @@ class Table {
             ['J-col']: col.colIndex + 1, // number 0 为false ，所以需要转成string
             ['J-col-sort']: col.sort
           }
-        )
+        );
 
         row += `<th ${colspan}${rowspan} ${colIndex} class="${className}">${_th}</th>`
 
-      })
+      });
 
       return row
-    }
+    };
 
     this.GLOBAL.columns.forEach(col => {
       rows += _this.wrapTag(_getTh(col), 'tr')
-    })
-
-    console.log(this.GLOBAL.columns)
+    });
 
     return `<thead>${rows}</thead>`
 
   }
 
-  getBodyRows () {
-    let tbody = '',
-      row = ''
+  getBodyRows() {
+    let tbody = '',row = '';
 
-    const compilerColumns = this.GLOBAL.compilerColumns
+    const compilerColumns = this.GLOBAL.compilerColumns;
+
 
     const _getBodyRow = (value, columns, currentRow) => {
-
       columns.forEach((val) => {
         //如果有render 方法的，直接调用render方法，并把这个td的值传进去
         if (val.render) {
-          const cellData = value[val.dataIndex]
+          const cellData = value[val.dataIndex];
           // 传递 当前cell 的值 ， 索引 ， 当前行的数据对象
           row += `<td>${val.render(cellData, currentRow, value)}</td>`
         } else {
           row += `<td>${value[val.dataIndex]}</td>`
         }
-      })
+      });
 
       return row
-    }
+    };
 
     this.settings.dataSource.forEach((value, index) => {
-      row = ''
-      _getBodyRow(value, compilerColumns, index)
-      tbody += `<tr ${pluginName}-tr-index="${index}">${row}</tr>`
-
-    })
+      row = '';
+      _getBodyRow(value, compilerColumns, index);
+      tbody += `<tr ${pluginName}-tr-index="${index}">${row}</tr>`;
+    });
 
     return tbody
   }
 
-  getTbody () {
+  getExpanedRow(value){
+    const compilerColumns = this.GLOBAL.compilerColumns;
+    const colNum = compilerColumns.length;
+    const expandedRowRender = this.settings.expandedRowRender;
+    return `<tr><td colspan="${colNum}">${expandedRowRender(value)}</td></tr>`
+  }
+
+  getTbody() {
     const tbody = this.getBodyRows()
     return `<tbody>${tbody}</tbody>`
   }
 
-  test (val) {
+  test(val) {
     console.log('I\'m' + JSON.stringify(val))
   }
 
-  getColgroup () {
+  getColgroup() {
     let cols = ''
 
     this.GLOBAL.compilerColumns.forEach(col => {
@@ -634,7 +782,7 @@ class Table {
 }
 
 // 对外提供的接口
-const openMethod = /setter|submit/
+const openMethod = /setState|submit/;
 
 $.fn[pluginName] = function (props) {
   const args = [].slice.call(arguments, 1)

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <title>Title</title>
+    <script src="/static/libs/require/require.js"></script>
+    <script src="/static/common/main.js"></script>
+</head>
+<body>
+<input type="text" oly-widget = 'spinner' spinner-opts={"changeValue":"test"} />
+<input type="text" oly-widget = 'spinner' />
+<input type="text"  />
+<script>
+    require(['spinner'],function () {
+        var test = function (e) {
+            alert(e)
+        }
+        $('input:last').spinner({
+            changeValue:test
+        })
+    })
+</script>
+</body>
+</html>

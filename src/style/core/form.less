@@ -1,0 +1,112 @@
+.form{
+
+	&__item{
+		margin-bottom: 8px;
+		min-height: 26px;
+	}
+
+	&__label{
+		padding: 4px 0;
+		text-align: right;
+	}
+
+	&--require{
+		&:before{
+			content: '*';
+			color: @error-color ;
+			font-family: @code-family ;
+			margin-right: 4px;
+		}
+	}
+
+	&--text-only{
+		.form{
+			&__item{
+				padding-top:4px;
+			}
+		}
+	}
+
+	&--fix-label{
+		.form{
+
+			&__item{
+				position: relative;
+				padding-left: 6em;
+			}
+
+			&__label{
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 6em;
+				padding-right: 6px;
+
+				&--nopd{
+					padding-top: 0 !important;
+				}
+			}
+		}
+
+		&-8em{
+			.form{
+			&__item{
+				padding-left: 8em;
+			}
+
+			&__label{
+				width: 8em;
+			}
+		}
+		}
+	}
+
+	&--sm{
+		.ui-input{
+			.input-sm();
+		}
+		textarea.ui-input{
+			height: auto;
+		}
+		.form__item{
+			min-height: 22px;
+			margin-bottom:4px;
+		}
+		.form__label{
+			padding-top: 2px;
+			padding-bottom: 2px;
+		}
+		.ui-checkbox{
+			padding-bottom: 2px;
+			padding-top: 2px;
+		}
+	}
+
+	&--sm&--text-only{
+		.form{
+			&__item{
+				padding-top:2px;
+			}
+		}
+	}
+
+	&--lg{
+		.ui-input{
+			.input-lg();
+		}
+		textarea.ui-input{
+			height: auto;
+		}
+		.form__item{
+			min-height: 32px;
+		}
+		.form__label{
+			padding-top: 7px;
+			padding-bottom: 7px;
+		}
+		.ui-checkbox{
+			padding-bottom: 7px;
+			padding-top: 7px;
+		}
+	}
+}

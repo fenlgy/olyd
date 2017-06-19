@@ -1,0 +1,17 @@
+// mixins for clearfix
+// ------------------------
+.clearfix() {
+  zoom: 1;
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+    clear: both;//最新的chrome中,before没有clear:both,会导致上下两个容器中的float元素影响
+  }
+  &:after {
+    //clear: both;
+    visibility: hidden;
+    font-size: 0;
+    height: 0;
+  }
+}

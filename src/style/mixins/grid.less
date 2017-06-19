@@ -1,0 +1,75 @@
+// mixins for grid system
+// ------------------------
+.container-fixed(@gutter: @grid-gutter-width) {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left:  (@gutter / 2);
+  padding-right: (@gutter / 2);
+}
+
+.make-row(@gutter: @grid-gutter-width) {
+  margin-left: (@gutter / -2);
+  margin-right: (@gutter / -2);
+  .clearfix;
+}
+
+.make-grid-columns() {
+  .col(@index) {
+    @item: ~".col-@{index}";
+    .col((@index + 1), @item);
+  }
+  .col(@index, @list) when (@index =< @grid-columns) {
+    @item: ~".col-@{index}";
+    .col((@index + 1), ~"@{list}, @{item}");
+  }
+  .col(@index, @list) when (@index > @grid-columns) {
+    @{list} {
+      position: relative;
+      float: left;
+      // Prevent columns from collapsing when empty
+      min-height: 1px;
+      padding-left:  (@grid-gutter-width / 2);
+      padding-right: (@grid-gutter-width / 2);
+    }
+  }
+  .col(1);
+}
+
+//.float-grid-columns(@class) {
+//  .col(@index) { // initial
+//    @item: ~".col@{class}-@{index}";
+//    .col((@index + 1), @item);
+//  }
+//  .col(@index, @list) when (@index =< @grid-columns) { // general
+//    @item: ~".col@{class}-@{index}";
+//    .col((@index + 1), ~"@{list}, @{item}");
+//  }
+//  .col(@index, @list) when (@index > @grid-columns) { // terminal
+//    @{list} {
+//      float: left;
+//      //flex: 0 0 auto;
+//    }
+//  }
+//  .col(1); // kickstart it
+//}
+
+// lesshint false
+.loop-grid-columns(@index, @class) when (@index > 0) {
+  .col@{class}-@{index} {
+    //display: block;
+    width: percentage((@index / @grid-columns));
+  }
+  .loop-grid-columns((@index - 1), @class);
+}
+
+.loop-grid-columns(@index, @class) when (@index = 0) {
+  .col@{class}-@{index} {
+    display: none;
+  }
+}
+
+.make-grid(@class: ~'') {
+  .make-grid-columns();
+  //.float-grid-columns(@class);
+  .loop-grid-columns(@grid-columns, @class);
+}

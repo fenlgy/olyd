@@ -1,0 +1,118 @@
+@transfer-width:500px;
+@transfer-height:300px;
+@transfer-mid-width:40px;
+@transfer-header-height:32px;
+
+@{css-prefix}-transfer {
+  width: @transfer-width;
+  height:@transfer-height;
+
+  &__left,&__right{
+    float: left;
+    padding-top:@transfer-header-height;
+    width: (@transfer-width - @transfer-mid-width) /2;
+    height:100%;
+    border:1px solid @border-color-base;
+    background: #fff;
+    border-radius:@border-radius-base;
+    box-shadow: 0 0 0 3px #f9f9f9;
+  }
+
+  &__header{
+    height:@transfer-header-height;
+    margin-top:-@transfer-header-height;
+    padding-left:8px;
+    padding-right:8px;
+    //background: #f9f9f9;
+    line-height:@transfer-header-height;
+    border-bottom:1px solid #ddd;
+    border-top-left-radius:@border-radius-base;
+    border-top-right-radius:@border-radius-base;
+
+    input{
+      margin-right:8px;
+    }
+  }
+
+  &__title{
+    float: right;
+    color: #333;
+  }
+
+  &__body{
+    height:100%;
+    overflow-y: auto;
+  }
+
+  &__no-data{
+    display: none;
+    text-align: center;
+    padding-top:30px;
+    color: #ccc
+  }
+
+  &__mid{
+    display: table;
+    float: left;
+    width: @transfer-mid-width;
+    height: 100%;
+    vertical-align: middle;
+    text-align: center;
+
+    &-con{
+      display: table-cell;
+      vertical-align: middle;
+    }
+
+    button {
+      border: 1px solid #ddd;
+      padding: 2px 8px;
+      margin-top: 8px;
+      color: #ccc;
+      background: #eee;
+      border-radius: @border-radius-base;
+      cursor: not-allowed;
+      outline: none;
+
+      &.actived {
+        background: @primary-color;
+        border-color: @primary-color;
+        color: #fff;
+        cursor: pointer;
+      }
+    }
+  }
+
+  &__item{
+    position: relative;
+    height:26px;
+    line-height:26px;
+    padding:0 32px 0 8px;
+    border-bottom:1px solid #eee;
+    cursor: move;
+    .toe;
+
+    >input{
+      margin-right:8px;
+    }
+
+    &:hover{
+      background: @doublelist-hover-bg;
+    }
+
+
+    &--selected{
+
+    }
+
+    &:after{
+      position: absolute;
+      right:8px;
+      top: 6px;
+      &:extend(.icon all);
+      content: '\e60f';
+      color: #ccc;
+    }
+
+  }
+}

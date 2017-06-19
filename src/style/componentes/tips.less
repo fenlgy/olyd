@@ -1,0 +1,46 @@
+.tips{
+  //display: none;
+  position: absolute;
+  top:-1000px;
+  background-color: @tips-bgc; //IE8 及以下不兼容rgba
+  opacity: .8;
+  color: #fff;
+  padding:4px 12px;
+  border-radius:@border-radius-base;
+  z-index: @zindex-tooltip;
+
+
+  &-arrow{
+    position: absolute;
+    .square(0);
+    border:5px solid transparent;
+  }
+
+  &-arrow-top{
+    top:-10px;
+    left:50%;
+    margin-left:-5px;
+    border-bottom-color: @tips-bgc;
+  }
+
+  &-arrow-bottom{
+    bottom:-10px;
+    left:50%;
+    margin-left:-5px;
+    border-top-color: @tips-bgc;
+  }
+
+  &-arrow-left{
+    left:-10px;
+    top:50%;
+    margin-top:-5px;
+    border-right-color: @tips-bgc;
+  }
+
+  &-arrow-right{
+    right:-10px;
+    top:50%;
+    margin-top:-5px;
+    border-left-color: @tips-bgc;
+  }
+}
