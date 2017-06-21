@@ -450,7 +450,7 @@ class Table {
     this.GLOBAL.columns = this.setExtraCol(columns)
 
     let compilerColumns = []
-    const normalizeColumns = this.settings.columns
+    const normalizeColumns = _utils.cloneDeep(this.settings.columns);
 
     this.getExtraCol().forEach(val => {
       normalizeColumns.unshift(val)
@@ -459,7 +459,7 @@ class Table {
     this.GLOBAL.normalizeColumns = normalizeColumns
 
     const _compilerColumns = (columns) => {
-      return columns.forEach((val, i) => {
+      return columns.forEach( val => {
         if (val.children && val.children.length > 0) {
           _compilerColumns(val.children)
         } else {
@@ -728,6 +728,7 @@ class Table {
     const dataSource = this.settings.dataSource;
 
     const generateTd = (value, columns, currentRow,isChildren,tds = '') => {
+      console.log(currentRow)
       columns.forEach((val) => {
         //如果有render 方法的，直接调用render方法，并把这个td的值传进去
         let cellData = val.render
@@ -735,7 +736,7 @@ class Table {
                : value[val.dataIndex];
         const toExpanded = !isChildren && columns[currentRow].children;
         if (val.className === _cls.colSerial && isChildren) cellData = '';// 如果是 children 则序列号不显示
-        if(toExpanded )
+
         tds += `<td>${cellData}</td>`
       });
       return tds
