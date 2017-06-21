@@ -452,12 +452,6 @@ class Table {
     let compilerColumns = []
     const normalizeColumns = _utils.cloneDeep(this.settings.columns);
 
-    this.getExtraCol().forEach(val => {
-      normalizeColumns.unshift(val)
-    });
-
-    this.GLOBAL.normalizeColumns = normalizeColumns
-
     const _compilerColumns = (columns) => {
       return columns.forEach( val => {
         if (val.children && val.children.length > 0) {
@@ -467,9 +461,15 @@ class Table {
         }
       })
     }
-
     _compilerColumns(normalizeColumns)
+    compilerColumns[0].isFirst = true;
 
+    this.getExtraCol().forEach(val => {
+      normalizeColumns.unshift(val)
+      compilerColumns.unshift(val)
+    });
+
+    this.GLOBAL.normalizeColumns = normalizeColumns
     this.GLOBAL.compilerColumns = compilerColumns
 
     return compilerColumns
@@ -734,8 +734,9 @@ class Table {
         let cellData = val.render
                ? val.render(value[val.dataIndex], currentRow, value)// 传递 当前cell 的值 ， 索引 ， 当前行的数据对象
                : value[val.dataIndex];
-        const toExpanded = !isChildren && columns[currentRow].children;
+
         if (val.className === _cls.colSerial && isChildren) cellData = '';// 如果是 children 则序列号不显示
+        if(!isChildren && val.isFirst ) cellData = `<i class="icon-expanded icon-plus--box"></i> ${cellData}`
 
         tds += `<td>${cellData}</td>`
       });
