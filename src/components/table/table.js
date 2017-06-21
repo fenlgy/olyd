@@ -47,7 +47,10 @@ const _cls = {
   container: getCls('__container'),
   head: getCls('__head'),
   body: getCls('__body'),
-  fixed: getCls('--fixed')
+  fixed: getCls('--fixed'),
+  colCheckbox:getCls('__th-checkbox'),
+  colSerial:getCls('__th-serial'),
+  colExpanded:getCls('__th-expanded'),
 }
 // Plugin.VERSION = '0.0.1';
 
@@ -624,7 +627,7 @@ class Table {
     if (this.settings.rowSelection) {
       extraCol.push({
         title: `<input type="checkbox" class="j-checkbox-all" />`,
-        className: pluginClassName + '__th-checkbox',
+        className: _cls.colCheckbox,
         render: () => {
           return `<input type="checkbox" />`
         }
@@ -634,7 +637,7 @@ class Table {
     if (this.settings.serialNumber) {
       extraCol.push({
         title: '#',
-        className: pluginClassName + '__th-checkbox',
+        className: _cls.colSerial,
         render: (a, index) => {
           return `${index + 1}`
         }
@@ -645,7 +648,7 @@ class Table {
     if(this.settings.expandedRowRender){
       extraCol.push({
         title: ``,
-        className: pluginClassName + '__th-checkbox',
+        className: _cls.colExpanded,
         render: () => {
           return `<i class="icon-expanded icon-plus--box"></i>`
         }
@@ -723,29 +726,34 @@ class Table {
   getBodyRows() {
     const compilerColumns = this.GLOBAL.compilerColumns; // 用于遍历每一个列
     const dataSource = this.settings.dataSource;
-console.log(dataSource)
-    const generateTd = (value, columns, currentRow,tds = '') => {
+
+    const generateTd = (value, columns, currentRow,isChildren,tds = '') => {
       columns.forEach((val) => {
         //如果有render 方法的，直接调用render方法，并把这个td的值传进去
-        if (val.render) {
-          const cellData = value[val.dataIndex];
-          // 传递 当前cell 的值 ， 索引 ， 当前行的数据对象
-          tds += `<td>${val.render(cellData, currentRow, value)}</td>`
-        } else {
-          tds += `<td>${value[val.dataIndex]}</td>`
-        }
+        let cellData = val.render
+               ? val.render(value[val.dataIndex], currentRow, value)// 传递 当前cell 的值 ， 索引 ， 当前行的数据对象
+               : value[val.dataIndex];
+        const toExpanded = !isChildren && columns[currentRow].children;
+        if (val.className === _cls.colSerial && isChildren) cellData = '';// 如果是 children 则序列号不显示
+        if(toExpanded )
+        tds += `<td>${cellData}</td>`
       });
-
       return tds
     };
 
-    const generateRow = (data,rows = '') => {
-      console.log(rows)
+    let rows = '',deep=-1;
+    const generateRow = (data, isChildren = false ) => {
       data.forEach((value, index) => {
-        console.log(value)
-        const row = generateTd(value, compilerColumns, index);
-        rows += `<tr ${pluginName}-tr-index="${index}">${row}</tr>`;
-        if(value.children) generateRow(value.children,rows)
+        const row = generateTd(value, compilerColumns, index , isChildren);
+        if(isChildren){
+          rows += `<tr ${pluginName}-tr-index="${deep}-${index}" ${isChildren ? 'style="display:none"':''}>${row}</tr>`;
+        }else {
+          rows += `<tr ${pluginName}-tr-index="${index}" >${row}</tr>`;
+        }
+        if(value.children){
+          deep++;
+          generateRow(value.children, true);
+        };
       });
 
       return rows

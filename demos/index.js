@@ -108,7 +108,7 @@ var dataSource = Mock.mock({
     "phone2|13900000000-13999999999": 1,
     email: "@email",
     "year|20-35": 1,
-    'children|4':[{
+    'children|2':[{
       name: '@cname',
       address: "@city",
       address1: "@city",
