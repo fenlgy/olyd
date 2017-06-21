@@ -98,8 +98,8 @@ var colums1 = [
 ]
 // 使用 Mock
 var dataSource = Mock.mock({
-  'list|100': [{
-    name: '@cname',
+  'list|2': [{
+    'name|+1': 1,
     address: "@city",
     address1: "@city",
     address2: "@city",
@@ -107,7 +107,18 @@ var dataSource = Mock.mock({
     "phone1|13900000000-13999999999": 1,
     "phone2|13900000000-13999999999": 1,
     email: "@email",
-    "year|20-35": 1
+    "year|20-35": 1,
+    'children|4':[{
+      name: '@cname',
+      address: "@city",
+      address1: "@city",
+      address2: "@city",
+      "phone|13900000000-13999999999": 1,
+      "phone1|13900000000-13999999999": 1,
+      "phone2|13900000000-13999999999": 1,
+      email: "@email",
+      "year|20-35": 1
+    }]
   }]
 })
 
@@ -117,8 +128,7 @@ var dataSource1 = Mock.mock({
     address: "@city",
     "phone|13900000000-13999999999": 1,
     email: "@email",
-    "year|20-35": 1,
-    children: [{}]
+    "year|20-35": 1
   }]
 })
 

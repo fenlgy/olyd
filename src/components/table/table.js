@@ -721,33 +721,38 @@ class Table {
   }
 
   getBodyRows() {
-    let tbody = '',row = '';
-
-    const compilerColumns = this.GLOBAL.compilerColumns;
-
-
-    const _getBodyRow = (value, columns, currentRow) => {
+    const compilerColumns = this.GLOBAL.compilerColumns; // 用于遍历每一个列
+    const dataSource = this.settings.dataSource;
+console.log(dataSource)
+    const generateTd = (value, columns, currentRow,tds = '') => {
       columns.forEach((val) => {
         //如果有render 方法的，直接调用render方法，并把这个td的值传进去
         if (val.render) {
           const cellData = value[val.dataIndex];
           // 传递 当前cell 的值 ， 索引 ， 当前行的数据对象
-          row += `<td>${val.render(cellData, currentRow, value)}</td>`
+          tds += `<td>${val.render(cellData, currentRow, value)}</td>`
         } else {
-          row += `<td>${value[val.dataIndex]}</td>`
+          tds += `<td>${value[val.dataIndex]}</td>`
         }
       });
 
-      return row
+      return tds
     };
 
-    this.settings.dataSource.forEach((value, index) => {
-      row = '';
-      _getBodyRow(value, compilerColumns, index);
-      tbody += `<tr ${pluginName}-tr-index="${index}">${row}</tr>`;
-    });
+    const generateRow = (data,rows = '') => {
+      console.log(rows)
+      data.forEach((value, index) => {
+        console.log(value)
+        const row = generateTd(value, compilerColumns, index);
+        rows += `<tr ${pluginName}-tr-index="${index}">${row}</tr>`;
+        if(value.children) generateRow(value.children,rows)
+      });
 
-    return tbody
+      return rows
+    };
+
+
+    return generateRow(dataSource)
   }
 
   getExpanedRow(value){
